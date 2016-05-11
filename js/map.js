@@ -128,7 +128,6 @@ Map.prototype.addPorts = function () {
 
 Map.prototype.keepMapUnderPos = function (x, y) {
     var mapPos = this.getMapPosFromWindowPos(x, y);
-    // console.log('map', x, this.compass.x, mapPos.x);
     this.globalContainer.x = x - this.mapContainer.scale * mapPos.x;
     this.globalContainer.y = y - this.mapContainer.scale * mapPos.y;
 };
@@ -189,12 +188,10 @@ Map.prototype.clickEvent = function () {
     var self = this;
     this.globalContainer.on("click", function (evt) {
         var mapPos = self.getMapPosFromWindowPos(evt.stageX, evt.stageY);
-        console.log(mapPos.x, mapPos.y);
         var gpsPos = {
             x: Math.round((mapPos.x - 4301) / 5),
             y: Math.round(-(mapPos.y - 4151) / 5)
         };
-        console.log(gpsPos.x, gpsPos.y);
         $('#cursorX').text(gpsPos.x);
         $('#cursorY').text(gpsPos.y);
     });
