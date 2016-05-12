@@ -35,10 +35,13 @@ canvas {
 .top-nav {
     position: fixed;
     top: 0;
-    left: 50%;
+    left: 0;
+}
+
+.background-map {
     background-color: rgba(209, 198, 180, 0.8);
     border: 1px solid black;
-    border-radius: 5px;
+    border-radius: 0;
 }
 
 .top-nav span {
@@ -57,4 +60,23 @@ canvas {
 #progress-bar-load .progress {
     width: 500px;
     margin: 25% auto auto;
+}
+
+#port-information {
+    position: fixed;
+    top: 150px;
+    left: 0;
+    min-width: 200px;
+}
+
+#how-to-use {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+}
+
+.background-map .panel-heading {
+    background-color: rgba(245, 234, 216, 0.8);
+    border-bottom: 1px solid black;
 }

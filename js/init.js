@@ -12,19 +12,25 @@ function initMap() {
             9: 'DimGrey'//Neutral
         },
         map: {
-            x: 4409,
-            y: 4376,
-            scale: 0.30
+            x: 1800,
+            y: 1800,
+            scale: 1
         },
         compass: {
-            x: 1320,
-            y: 1300,
-            scale: 0.7
+            x: 1800,
+            y: 1800,
+            scale: 0.55
         },
         portsOffset: {
             x: 208,
-            y: 55
+            y: 55,
+            ratio: 4000/8600
+        },
+        gps:{
+            x: 2000,
+            y: 1931,
+            ratio: 2.33
         }
     };
-    var navalMap = new NavalMap('canvas', 'img/old_map.jpg', 'img/compass.png', config);
+    var navalMap = new NavalMap('canvas', 'img/map-lighter.jpg', 'img/compass.png', config);
 }

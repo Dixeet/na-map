@@ -18,6 +18,9 @@ NavalMap.prototype.init = function init(imageMapUrl, imageCompassUrl) {
                     stage.enableMouseOver(10);
                     self.map = new Map(self.canvas, stage, self.imageMap, self.imageCompass, self.config);
                     $("#progress-bar-load").hide();
+                    $(".top-nav").removeClass('hide');
+                    $("#port-information").removeClass('hide');
+                    $("#how-to-use").removeClass('hide');
                 })
             }
         )
@@ -91,7 +94,7 @@ Map.prototype.initContainerMap = function () {
         var shape = new createjs.Shape();
         self.mapContainer.lineIndex = self.mapContainer.children.length;
         self.mapContainer.addChild(shape);
-        shape.graphics.setStrokeStyle(5, "round").beginStroke('#3d3d3d').moveTo((self.compass.x - self.mapContainer.x) / self.mapContainer.scale, (self.compass.y - self.mapContainer.y) / self.mapContainer.scale).lineTo(x, y);
+        shape.graphics.setStrokeStyle(3, "round").beginStroke('#3d3d3d').moveTo((self.compass.x - self.mapContainer.x) / self.mapContainer.scale, (self.compass.y - self.mapContainer.y) / self.mapContainer.scale).lineTo(x, y);
     };
 
     this.mapContainer.removeLine = function () {
@@ -114,13 +117,20 @@ Map.prototype.addPorts = function () {
     var self = this;
     Ports.forEach(function (port, idx) {
         var circle = new createjs.Shape();
-        circle.graphics.beginFill(self.config.color[port.Nation]).drawCircle(0, 0, 10);
-        circle.x = (port.sourcePosition.x + self.config.portsOffset.x);
-        circle.y = (port.sourcePosition.y + self.config.portsOffset.y);
+        circle.graphics.beginFill(self.config.color[port.Nation]).drawCircle(0, 0, 5);
+        circle.x = (port.sourcePosition.x + self.config.portsOffset.x) * self.config.portsOffset.ratio;
+        circle.y = (port.sourcePosition.y + self.config.portsOffset.y) * self.config.portsOffset.ratio;
         circle.cursor = "pointer";
         circle.idx = idx;
         circle.on("click", function (evt) {
             console.log('toto');
+            var currPort = Ports[this.idx];
+            $('#port-title').text(currPort.Name);
+            $('#nation').text(getNationFromIdx(currPort.Nation).Name);
+            var timer = currPort.ConquestFlagTimeSlot + 'h - ' + (currPort.ConquestFlagTimeSlot + 2) + "h";
+            $('#timer').text(currPort.ConquestFlagTimeSlot == -1?'No Timer':timer);
+            $('#capital').text(currPort.Capital?'yes':'no');
+            $('#regional').text(currPort.Regional?'yes':'no');
         });
         self.portsContainer.addChild(circle);
     });
@@ -189,8 +199,8 @@ Map.prototype.clickEvent = function () {
     this.globalContainer.on("click", function (evt) {
         var mapPos = self.getMapPosFromWindowPos(evt.stageX, evt.stageY);
         var gpsPos = {
-            x: Math.round((mapPos.x - 4301) / 5),
-            y: Math.round(-(mapPos.y - 4151) / 5)
+            x: Math.round((mapPos.x - self.config.gps.x) / self.config.gps.ratio),
+            y: Math.round(-(mapPos.y - self.config.gps.y) / self.config.gps.ratio)
         };
         $('#cursorX').text(gpsPos.x);
         $('#cursorY').text(gpsPos.y);
@@ -229,15 +239,15 @@ Map.prototype.mouseWheelEvent = function () {
             self.alreadyZooming = true;
             setTimeout(function () {
                 self.alreadyZooming = false;
-            }, 40);
+            }, 45);
             if (event.deltaY == 1) {
-                if (self.mapContainer.scale < 1) {
+                if (self.mapContainer.scale < 1.8) {
                     self.zoom(0.1);
                     self.keepMapUnderPos(event.pageX, event.pageY);
                     self.keepCompassUnderCurrentPos();
                 }
             } else if (event.deltaY == -1) {
-                if (self.mapContainer.scale > 0.2) {
+                if (self.mapContainer.scale > 0.4) {
                     self.zoom(-0.1);
                     self.keepMapUnderPos(event.pageX, event.pageY);
                     self.keepCompassUnderCurrentPos();

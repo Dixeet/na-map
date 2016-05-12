@@ -12,7 +12,7 @@
     <script src="js/init.js"></script>
 </head>
 <body onload="initMap()">
-<div class="top-nav">
+<div class="top-nav hide background-map">
     <span>x:</span><span id="cursorX" class="cursor-pos">0</span><span>y:</span><span id="cursorY" class="cursor-pos">0</span>
 </div>
 <div id="progress-bar-load">
@@ -20,6 +20,30 @@
         <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
             <span class="">Loading map and others ressources...</span>
         </div>
+    </div>
+</div>
+<div id="port-information" class="background-map panel panel-default hide">
+    <div class="panel-heading">
+        <h2 id="port-title" class="panel-title">Port informations</h2>
+    </div>
+    <div class="panel-body">
+        <strong>Nation : </strong><span id="nation"></span><br>
+        <strong>Timer (UTC) : </strong><span id="timer"></span><br>
+        <strong>Capital : </strong><span id="capital"></span><br>
+        <strong>Regional : </strong><span id="regional"></span><br>
+    </div>
+</div>
+<div id="how-to-use" class="background-map panel panel-default hide">
+    <div class="panel-heading">
+        <h2 class="panel-title">How to use</h2>
+    </div>
+    <div class="panel-body">
+        Drag and Drop to move the map<br>
+        Scroll to zoom <br>
+        Double click to move the compass <br>
+        Double click again to draw a line <br>
+        Click anywhere to have the cursor position (F11 in game) <br>
+        Click on a port to get its information
     </div>
 </div>
 <canvas id="canvas"></canvas>
