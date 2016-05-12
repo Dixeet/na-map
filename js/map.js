@@ -16,6 +16,7 @@ NavalMap.prototype.init = function init(imageMapUrl, imageCompassUrl) {
                     var stage = new createjs.Stage(canvas);
                     createjs.Touch.enable(stage);
                     stage.enableMouseOver(10);
+                    createjs.Ticker.framerate = 30;
                     self.map = new Map(self.canvas, stage, self.imageMap, self.imageCompass, self.config);
                     $("#progress-bar-load").hide();
                     $(".top-nav").removeClass('hide');
