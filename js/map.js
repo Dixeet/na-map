@@ -80,10 +80,10 @@ Map.prototype.init = function (imageMap) {
     this.mapContainer.addChild(new createjs.Bitmap(imageMap));
     this.mapContainer.addChild(this.portsContainer);
     this.mapContainer.hasBeenDblClicked = false;
-    this.createAllEvents();
-    this.resizeCanvas(this);
     this.initContainerMap();
     this.addPorts();
+    this.resizeCanvas(this);
+    this.createAllEvents();
     this.update = true;
 };
 
@@ -124,7 +124,6 @@ Map.prototype.addPorts = function () {
         circle.cursor = "pointer";
         circle.idx = idx;
         circle.on("click", function (evt) {
-            console.log('toto');
             var currPort = Ports[this.idx];
             $('#port-title').text(currPort.Name);
             $('#nation').text(getNationFromIdx(currPort.Nation).Name);
