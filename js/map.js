@@ -17,7 +17,7 @@ NavalMap.prototype.init = function init(imageMapUrl, imageCompassUrl) {
                     createjs.Touch.enable(stage);
                     stage.enableMouseOver(10);
                     self.map = new Map(self.canvas, stage, self.imageMap, self.imageCompass, self.config);
-
+                    $("#progress-bar-load").hide();
                 })
             }
         )
@@ -77,7 +77,7 @@ Map.prototype.init = function (imageMap) {
     this.mapContainer.addChild(this.portsContainer);
     this.mapContainer.hasBeenDblClicked = false;
     this.createAllEvents();
-    this.resizeCanvas();
+    this.resizeCanvas(this);
     this.initContainerMap();
     this.addPorts();
     this.update = true;
@@ -253,13 +253,14 @@ Map.prototype.mouseWheelEvent = function () {
 };
 
 Map.prototype.resizeCanvasEvent = function () {
-    window.addEventListener('resize', this.resizeCanvas, false);
+    var self = this;
+    window.addEventListener('resize', function(){self.resizeCanvas(self)}, false);
 };
 
-Map.prototype.resizeCanvas = function () {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
-    this.update = true;
+Map.prototype.resizeCanvas = function (self) {
+    self.canvas.width = window.innerWidth;
+    self.canvas.height = window.innerHeight;
+    self.update = true;
 };
 
 Map.prototype.tickEvent = function () {
@@ -284,6 +285,8 @@ Map.prototype.copyMapContainer = function () {
 function Compass(imageCompass, config) {
     this.addChild(new createjs.Bitmap(imageCompass).setTransform(-imageCompass.width / 2, -imageCompass.height / 2));
     this.setScale(config.compass.scale);
+    this.x = config.compass.x;
+    this.y = config.compass.y;
 }
 Compass.prototype = new createjs.Container();
 Compass.prototype.constructor = Compass;

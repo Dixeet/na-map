@@ -17,8 +17,8 @@ function initMap() {
             scale: 0.30
         },
         compass: {
-            x: 0,
-            y: 0,
+            x: 1320,
+            y: 1300,
             scale: 0.7
         },
         portsOffset: {
@@ -26,5 +26,5 @@ function initMap() {
             y: 55
         }
     };
-    new NavalMap('canvas', 'img/old_map.jpg', 'img/compass.png', config);
+    var navalMap = new NavalMap('canvas', 'img/old_map.jpg', 'img/compass.png', config);
 }
