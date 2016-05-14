@@ -5,58 +5,116 @@ function NavalMap(canvasId, imageMapUrl, imageCompassUrl, config) {
     this.imageMap = new Image();
     this.imageCompass = new Image();
     this.config = config;
+    this.itemsLoaded = false;
+    this.nationsLoaded = false;
+    this.shopsLoaded = false;
+    this.portsLoaded = false;
+    this.imageMapLoaded = false;
+    this.imageCompassLoaded = false;
     this.init(imageMapUrl, imageCompassUrl);
 }
 
 NavalMap.prototype.init = function init(imageMapUrl, imageCompassUrl) {
     var self = this;
-    this.loadDataUrl(function () {
-        self.loadImageMap(imageMapUrl, function () {
-                self.loadImageCompass(imageCompassUrl, function () {
-                    var stage = new createjs.Stage(canvas);
-                    createjs.Touch.enable(stage);
-                    stage.enableMouseOver(10);
-                    createjs.Ticker.framerate = 30;
-                    self.map = new Map(self.canvas, stage, self.imageMap, self.imageCompass, self.config);
-                    $("#progress-bar-load").hide();
-                    $(".top-nav").removeClass('hide');
-                    $("#port-information").removeClass('hide');
-                    $("#how-to-use").removeClass('hide');
-                })
-            }
-        )
+    this.loadEverything(imageMapUrl, imageCompassUrl, function () {
+        var stage = new createjs.Stage(self.canvas);
+        createjs.Touch.enable(stage);
+        stage.enableMouseOver(10);
+        createjs.Ticker.framerate = 30;
+        self.map = new Map(self.canvas, stage, self.imageMap, self.imageCompass, self.config);
+        $("#progress-bar-load").hide();
+        $(".top-nav").removeClass('hide');
+        $("#port-information").removeClass('hide');
+        $("#how-to-use").removeClass('hide');
     });
 };
 
 NavalMap.prototype.loadImageMap = function loadImageMap(url, cb) {
     this.imageMap.src = url;
+    var self = this;
     this.imageMap.onload = function () {
-        if (cb) {
-            cb();
+        self.imageMapLoaded = true;
+        if (self.checkEverethingIsLoaded()) {
+            if(cb) {
+                cb();
+            }
         }
     };
 };
 
 NavalMap.prototype.loadImageCompass = function loadImageCompass(url, cb) {
     this.imageCompass.src = url;
+    var self = this;
     this.imageCompass.onload = function () {
-        if (cb) {
-            cb();
+        self.imageCompassLoaded = true;
+        if (self.checkEverethingIsLoaded()) {
+            if(cb) {
+                cb();
+            }
         }
     };
 };
 
-NavalMap.prototype.loadDataUrl = function loadDataUrl(cb) {
-    $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/ItemTemplates_cleanopenworldprodeu1.json").done(
-        $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/Nations_cleanopenworldprodeu1.json").done(
-            $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/Shops_cleanopenworldprodeu1.json").done(
-                $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/Ports_cleanopenworldprodeu1.json").done(function () {
-                        if (cb) {
-                            cb();
-                        }
-                    }
-                ))))
-    ;
+NavalMap.prototype.checkEverethingIsLoaded = function () {
+    return this.itemsLoaded && this.nationsLoaded && this.shopsLoaded && this.portsLoaded && this.imageMapLoaded && this.imageCompassLoaded;
+};
+
+NavalMap.prototype.loadItems = function(cb) {
+    var self = this;
+    $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/ItemTemplates_cleanopenworldprodeu1.json").done(function(){
+        self.itemsLoaded = true;
+        if (self.checkEverethingIsLoaded()) {
+            if(cb) {
+                cb();
+            }
+        }
+    });
+};
+
+NavalMap.prototype.loadNations = function(cb) {
+    var self = this;
+    $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/Nations_cleanopenworldprodeu1.json").done(function(){
+        self.nationsLoaded = true;
+        if (self.checkEverethingIsLoaded()) {
+            if(cb) {
+                cb();
+            }
+        }
+    });
+};
+
+NavalMap.prototype.loadShops = function(cb) {
+    var self = this;
+    $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/Shops_cleanopenworldprodeu1.json").done(function(){
+        self.shopsLoaded = true;
+        if (self.checkEverethingIsLoaded()) {
+            if(cb) {
+                cb();
+            }
+        }
+    });
+};
+
+NavalMap.prototype.loadPorts = function(cb) {
+    var self = this;
+    $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/Ports_cleanopenworldprodeu1.json").done(function(){
+        self.portsLoaded = true;
+        if (self.checkEverethingIsLoaded()) {
+            if(cb) {
+                cb();
+            }
+        }
+    });
+};
+
+
+NavalMap.prototype.loadEverything = function loadEverything(urlMap, urlCompass, cb) {
+    this.loadImageMap(urlMap, cb);
+    this.loadImageCompass(urlCompass, cb);
+    this.loadShops(cb);
+    this.loadItems(cb);
+    this.loadPorts(cb);
+    this.loadNations(cb);
 };
 
 function Map(canvas, stage, imageMap, imageCompass, config) {
