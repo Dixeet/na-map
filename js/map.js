@@ -131,6 +131,7 @@ Map.prototype.addPorts = function () {
             $('#timer').text(currPort.ConquestFlagTimeSlot == -1?'No Timer':timer);
             $('#capital').text(currPort.Capital?'yes':'no');
             $('#regional').text(currPort.Regional?'yes':'no');
+            $('#shallow').text(currPort.Depth == 1?'yes':'no');
         });
         self.portsContainer.addChild(circle);
     });
