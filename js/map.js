@@ -189,6 +189,7 @@ Map.prototype.addPorts = function () {
             $('#capital').text(currPort.Capital?'yes':'no');
             $('#regional').text(currPort.Regional?'yes':'no');
             $('#shallow').text(currPort.Depth == 1?'yes':'no');
+            $('#capturer').text(currPort.Capturer);
             var produces = Shops[this.idx].ResourcesProduced;
             var consumes = Shops[this.idx].ResourcesConsumed;
             $('#produces-list').html('');
