@@ -123,7 +123,6 @@ function Map(canvas, stage, imageMap, imageCompass, config) {
     this.stage = stage;
     this.globalContainer = new createjs.Container();
     this.mapContainer = new createjs.Container();
-    this.portsContainer = new createjs.Container();
     this.unmodifiedMapContainer = {};
     this.compass = new Compass(imageCompass, config);
     this.update = false;
@@ -137,7 +136,6 @@ Map.prototype.init = function (imageMap) {
     this.globalContainer.addChild(this.mapContainer);
     this.globalContainer.addChild(this.compass);
     this.mapContainer.addChild(new createjs.Bitmap(imageMap));
-    this.mapContainer.addChild(this.portsContainer);
     this.mapContainer.hasBeenDblClicked = false;
     this.initContainerMap();
     this.addPorts();
@@ -182,7 +180,7 @@ Map.prototype.addPorts = function () {
         circle.y = (port.sourcePosition.y + self.config.portsOffset.y) * self.config.portsOffset.ratio;
         circle.cursor = "pointer";
         circle.idx = idx;
-        circle.on("click", function (evt) {
+        circle.on("click", function () {
             var currPort = Ports[this.idx];
             $('#port-title').text(currPort.Name);
             $('#nation').text(getNationFromIdx(currPort.Nation).Name);
@@ -204,7 +202,7 @@ Map.prototype.addPorts = function () {
                 $('#consumes-list').append('<li class="list-group-item">'+item.Name+' : '+ consume.Value+'</li>');
             });
         });
-        self.portsContainer.addChild(circle);
+        self.mapContainer.addChild(circle);
     });
     this.update = true;
 };
