@@ -80,3 +80,7 @@ canvas {
     background-color: rgba(245, 234, 216, 0.8);
     border-bottom: 1px solid black;
 }
+
+.top-nav input.form-control {
+    max-width: 60px !important;
+}

@@ -1,3 +1,4 @@
+var navalMap;
 function initMap() {
     var config = {
         color: {
@@ -32,5 +33,5 @@ function initMap() {
             ratio: 2.33
         }
     };
-    var navalMap = new NavalMap('canvas', 'img/map-lighter.jpg', 'img/compass.png', config);
+    navalMap = new NavalMap('canvas', 'img/map-lighter.jpg', 'img/compass.png', config);
 }

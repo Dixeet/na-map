@@ -128,6 +128,7 @@ function Map(canvas, stage, imageMap, imageCompass, config) {
     this.compass = new Compass(imageCompass, config);
     this.update = false;
     this.alreadyZooming = false;
+    this.gpsCursor = undefined;
     this.init(imageMap);
 }
 
@@ -193,6 +194,7 @@ Map.prototype.addPorts = function () {
         });
         self.portsContainer.addChild(circle);
     });
+    this.update = true;
 };
 
 Map.prototype.keepMapUnderPos = function (x, y) {
@@ -219,11 +221,38 @@ Map.prototype.getNewWindowPosFromMapPos = function (x, y) {
     }
 };
 
+Map.prototype.getMapPosFromGpsPos = function(x , y) {
+    return {
+        x: Math.round(x * this.config.gps.ratio + this.config.gps.x),
+        y: Math.round(-(y * this.config.gps.ratio - this.config.gps.y))
+    }
+};
+
 Map.prototype.getMapPosFromWindowPos = function (x, y) {
     return {
         x: (x - this.unmodifiedMapContainer.x) / this.unmodifiedMapContainer.scale,
         y: (y - this.unmodifiedMapContainer.y) / this.unmodifiedMapContainer.scale
     };
+};
+
+
+Map.prototype.gps = function (x, y) {
+    if (this.gpsCursor) {
+        this.mapContainer.removeChild(this.gpsCursor);
+    }
+    this.gpsCursor = new createjs.Shape();
+    this.gpsCursor.graphics.setStrokeStyle(2).beginStroke("#000000").beginFill("YellowGreen").drawCircle(0,0,7);
+    var mapPos = this.getMapPosFromGpsPos(x, y);
+    this.gpsCursor.x = mapPos.x;
+    this.gpsCursor.y = mapPos.y;
+    this.mapContainer.addChild(this.gpsCursor);
+    this.centerTo(mapPos.x, mapPos.y);
+    this.update = true;
+};
+
+Map.prototype.gpsSubmit = function () {
+    event.preventDefault();
+    this.gps($('#xGps').val(), $('#yGps').val());
 };
 
 Map.prototype.createAllEvents = function () {
