@@ -19,8 +19,8 @@ NavalMap.prototype.init = function init(imageMapUrl, imageCompassUrl) {
     this.loadEverything(imageMapUrl, imageCompassUrl, function () {
         var stage = new createjs.Stage(self.canvas);
         createjs.Touch.enable(stage);
-        stage.enableMouseOver(10);
-        createjs.Ticker.framerate = 30;
+        stage.enableMouseOver(15);
+        createjs.Ticker.timingMode = createjs.Ticker.RAF;
         self.map = new Map(self.canvas, stage, self.imageMap, self.imageCompass, self.config);
         $("#progress-bar-load").hide();
         $(".top-nav").removeClass('hide');
@@ -205,7 +205,6 @@ Map.prototype.addPorts = function () {
         });
         self.mapContainer.addChild(circle);
     });
-    this.update = true;
 };
 
 Map.prototype.keepMapUnderPos = function (x, y) {
