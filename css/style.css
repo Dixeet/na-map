@@ -45,7 +45,7 @@ canvas {
 }
 
 .top-nav span {
-    margin: 10px 20px 10px 20px;
+    margin: 10px 20px 10px 5px;
 }
 
 #progress-bar-load {
@@ -83,4 +83,8 @@ canvas {
 
 .top-nav input.form-control {
     max-width: 60px !important;
+}
+
+#gpsForm {
+    margin-top: 10px;
 }
