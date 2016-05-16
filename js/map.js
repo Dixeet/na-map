@@ -250,13 +250,17 @@ Map.prototype.gps = function (x, y) {
     this.update = true;
 };
 
-Map.prototype.gpsSubmit = function () {
-    event.preventDefault();
-    this.gps($('#xGps').val(), $('#yGps').val());
+Map.prototype.gpsSubmitEvent = function () {
+    var self = this;
+    $("#gpsForm").submit(function (event) {
+        event.preventDefault();
+        self.gps($('#xGps').val(), $('#yGps').val());
+    });
 };
 
 Map.prototype.createAllEvents = function () {
     this.resizeCanvasEvent();
+    this.gpsSubmitEvent();
     this.mouseDownEvent();
     this.clickEvent();
     this.pressMoveEvent();
