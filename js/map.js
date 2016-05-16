@@ -191,6 +191,18 @@ Map.prototype.addPorts = function () {
             $('#capital').text(currPort.Capital?'yes':'no');
             $('#regional').text(currPort.Regional?'yes':'no');
             $('#shallow').text(currPort.Depth == 1?'yes':'no');
+            var produces = Shops[this.idx].ResourcesProduced;
+            var consumes = Shops[this.idx].ResourcesConsumed;
+            $('#produces-list').html('');
+            $('#consumes-list').html('');
+            produces.forEach(function (produce) {
+                var item = getItemTemplateFromId(produce.Key);
+                $('#produces-list').append('<li class="list-group-item">'+item.Name+' : '+ produce.Value+'</li>');
+            });
+            consumes.forEach(function (consume) {
+                var item = getItemTemplateFromId(consume.Key);
+                $('#consumes-list').append('<li class="list-group-item">'+item.Name+' : '+ consume.Value+'</li>');
+            });
         });
         self.portsContainer.addChild(circle);
     });
@@ -345,9 +357,6 @@ Map.prototype.mouseWheelEvent = function () {
                     self.keepCompassUnderCurrentPos();
                 }
             }
-            //self.compass.x += self.mapContainer.x - self.unmodifiedMapContainer.x;
-            //self.compass.y += self.mapContainer.y - self.unmodifiedMapContainer.y;
-            //self.compass.keepSizeAndPos(self.unmodifiedMapContainer.scale, self.mapContainer.scale);
             self.update = true;
         }
     });
