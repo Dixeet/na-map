@@ -251,10 +251,10 @@ Map.prototype.gps = function (x, y) {
         this.mapContainer.removeChild(this.gpsCursor);
     }
     this.gpsCursor = new createjs.Shape();
-    this.gpsCursor.graphics.setStrokeStyle(2).beginStroke("#000000").beginFill("YellowGreen").drawCircle(0,0,7);
+    this.gpsCursor.graphics.setStrokeStyle(2).beginStroke("OrangeRed").drawCircle(0,0,30);
     var mapPos = this.getMapPosFromGpsPos(x, y);
-    this.gpsCursor.x = mapPos.x;
-    this.gpsCursor.y = mapPos.y;
+    this.gpsCursor.x = mapPos.x + (Math.random() > 0.5 ? Math.floor((Math.random() * 10 * 13 / 10)) : - Math.floor((Math.random() * 10 * 13 / 10)));
+    this.gpsCursor.y = mapPos.y + (Math.random() > 0.5 ? Math.floor((Math.random() * 10 * 13 / 10)) : - Math.floor((Math.random() * 10 * 13 / 10)));
     this.mapContainer.addChild(this.gpsCursor);
     this.centerTo(mapPos.x, mapPos.y);
     this.update = true;
