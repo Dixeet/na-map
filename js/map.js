@@ -128,6 +128,7 @@ function Map(canvas, stage, imageMap, imageCompass, config) {
     this.update = false;
     this.alreadyZooming = false;
     this.gpsCursor = undefined;
+    this.statistics = {};
     this.init(imageMap);
 }
 
@@ -138,9 +139,14 @@ Map.prototype.init = function (imageMap) {
     this.mapContainer.addChild(new createjs.Bitmap(imageMap));
     this.mapContainer.hasBeenDblClicked = false;
     this.initContainerMap();
-    this.addPorts();
     this.resizeCanvas(this);
     this.createAllEvents();
+    var self = this;
+    Nations.Nations.forEach(function(nation) {
+        self.statistics[nation.Name] = 0;
+    });
+    this.addPorts();
+    this.populateStatistics();
     this.update = true;
 };
 
@@ -163,6 +169,13 @@ Map.prototype.initContainerMap = function () {
     this.globalContainer.cursor = "default";
 };
 
+Map.prototype.populateStatistics = function () {
+    var stats = $("#ports-number")
+    $.each(this.statistics, function(name, number) {
+        stats.append('<strong>' + name + ' : </strong>' + number + '<br>');
+    })
+};
+
 Map.prototype.setScale = function (scale) {
     this.mapContainer.scale = this.mapContainer.scaleX = this.mapContainer.scaleY = scale;
 };
@@ -180,6 +193,7 @@ Map.prototype.addPorts = function () {
         circle.y = (port.sourcePosition.y + self.config.portsOffset.y) * self.config.portsOffset.ratio;
         circle.cursor = "pointer";
         circle.idx = idx;
+        self.statistics[getNationFromIdx(port.Nation).Name] += 1;
         circle.on("click", function () {
             var currPort = Ports[this.idx];
             $('#port-title').text(currPort.Name);

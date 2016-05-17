@@ -1,5 +1,6 @@
 <html>
 <head>
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="application/javascript" src="js/jquery-2.2.3.min.js"></script>
@@ -60,17 +61,26 @@
         </ul>
     </div>
 </div>
-<div id="how-to-use" class="background-map panel panel-default hide">
-    <div class="panel-heading">
-        <h2 class="panel-title">How to use</h2>
+<div id="how-to-use" class="hide">
+    <div class="background-map panel panel-default">
+        <div class="panel-heading">
+            <h2 class="panel-title">How to use</h2>
+        </div>
+        <div class="panel-body">
+            Click and drag to move the map<br>
+            Scroll to zoom <br>
+            Double click to move the compass <br>
+            Double click again to draw a line <br>
+            Click anywhere to get the cursor position (F11 in game) <br>
+            Click on a port to get its information
+        </div>
     </div>
-    <div class="panel-body">
-        Click and drag to move the map<br>
-        Scroll to zoom <br>
-        Double click to move the compass <br>
-        Double click again to draw a line <br>
-        Click anywhere to have the cursor position (F11 in game) <br>
-        Click on a port to get its information
+    <div class="background-map panel panel-default">
+        <div class="panel-heading">
+            <h2 class="panel-title">Number of ports</h2>
+        </div>
+        <div id="ports-number" class="panel-body">
+        </div>
     </div>
 </div>
 <canvas id="canvas"></canvas>
