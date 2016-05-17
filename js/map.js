@@ -19,13 +19,11 @@ NavalMap.prototype.init = function init(imageMapUrl, imageCompassUrl) {
     this.loadEverything(imageMapUrl, imageCompassUrl, function () {
         var stage = new createjs.Stage(self.canvas);
         createjs.Touch.enable(stage);
-        stage.enableMouseOver(15);
+        stage.enableMouseOver(5);
+        stage.tickEnabled = false;
+        //createjs.Ticker.framerate = 60;
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
         self.map = new Map(self.canvas, stage, self.imageMap, self.imageCompass, self.config);
-        $("#progress-bar-load").hide();
-        $(".top-nav").removeClass('hide');
-        $("#port-information").removeClass('hide');
-        $("#how-to-use").removeClass('hide');
     });
 };
 
@@ -61,7 +59,7 @@ NavalMap.prototype.checkEverethingIsLoaded = function () {
 
 NavalMap.prototype.loadItems = function(cb) {
     var self = this;
-    $.getScript("items.php").done(function(){
+    $.getScript("http://map.licornes.eu/items.php").done(function(){
         self.itemsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -73,7 +71,7 @@ NavalMap.prototype.loadItems = function(cb) {
 
 NavalMap.prototype.loadNations = function(cb) {
     var self = this;
-    $.getScript("nations.php").done(function(){
+    $.getScript("http://map.licornes.eu/nations.php").done(function(){
         self.nationsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -85,7 +83,7 @@ NavalMap.prototype.loadNations = function(cb) {
 
 NavalMap.prototype.loadShops = function(cb) {
     var self = this;
-    $.getScript("shops.php").done(function(){
+    $.getScript("http://map.licornes.eu/shops.php").done(function(){
         self.shopsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -97,7 +95,7 @@ NavalMap.prototype.loadShops = function(cb) {
 
 NavalMap.prototype.loadPorts = function(cb) {
     var self = this;
-    $.getScript("ports.php").done(function(){
+    $.getScript("http://map.licornes.eu/ports.php").done(function(){
         self.portsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -129,11 +127,15 @@ function Map(canvas, stage, imageMap, imageCompass, config) {
     this.alreadyZooming = false;
     this.gpsCursor = undefined;
     this.statistics = {};
+    this.fpsLabel = new createjs.Text("-- fps", "bold 18px Arial", "black");
     this.init(imageMap);
 }
 
 Map.prototype.init = function (imageMap) {
     this.stage.addChild(this.globalContainer);
+    this.stage.addChild(this.fpsLabel);
+    this.fpsLabel.x = 240;
+    this.fpsLabel.y = 10;
     this.globalContainer.addChild(this.mapContainer);
     this.globalContainer.addChild(this.compass);
     this.mapContainer.addChild(new createjs.Bitmap(imageMap));
@@ -147,7 +149,15 @@ Map.prototype.init = function (imageMap) {
     });
     this.addPorts();
     this.populateStatistics();
-    this.update = true;
+    this.stage.update();
+    self.tickEvent();
+    setTimeout(function() {
+        $("#progress-bar-load").hide();
+        $(".top-nav").removeClass('hide');
+        $("#port-information").removeClass('hide');
+        $("#how-to-use").removeClass('hide');
+    },600);
+    //this.update = true;
 };
 
 Map.prototype.initContainerMap = function () {
@@ -166,7 +176,7 @@ Map.prototype.initContainerMap = function () {
             self.mapContainer.removeChildAt(self.mapContainer.lineIndex);
         }
     };
-    this.globalContainer.cursor = "default";
+    //this.globalContainer.cursor = "default";
 };
 
 Map.prototype.populateStatistics = function () {
@@ -186,39 +196,44 @@ Map.prototype.zoom = function (increment) {
 
 Map.prototype.addPorts = function () {
     var self = this;
-    Ports.forEach(function (port, idx) {
-        var circle = new createjs.Shape();
-        circle.graphics.beginFill(self.config.color[port.Nation]).drawCircle(0, 0, 5);
-        circle.x = (port.sourcePosition.x + self.config.portsOffset.x) * self.config.portsOffset.ratio;
-        circle.y = (port.sourcePosition.y + self.config.portsOffset.y) * self.config.portsOffset.ratio;
-        circle.cursor = "pointer";
-        circle.idx = idx;
-        self.statistics[getNationFromIdx(port.Nation).Name] += 1;
-        circle.on("click", function () {
-            var currPort = Ports[this.idx];
-            $('#port-title').text(currPort.Name);
-            $('#nation').text(getNationFromIdx(currPort.Nation).Name);
-            var timer = currPort.ConquestFlagTimeSlot + 'h - ' + (currPort.ConquestFlagTimeSlot + 2) + "h";
-            $('#timer').text(currPort.ConquestFlagTimeSlot == -1?'No Timer':timer);
-            $('#capital').text(currPort.Capital?'yes':'no');
-            $('#regional').text(currPort.Regional?'yes':'no');
-            $('#shallow').text(currPort.Depth == 1?'yes':'no');
-            $('#capturer').text(currPort.Capturer);
-            var produces = Shops[this.idx].ResourcesProduced;
-            var consumes = Shops[this.idx].ResourcesConsumed;
-            $('#produces-list').html('');
-            $('#consumes-list').html('');
-            produces.forEach(function (produce) {
-                var item = getItemTemplateFromId(produce.Key);
-                $('#produces-list').append('<li class="list-group-item">'+item.Name+' : '+ produce.Value+'</li>');
+    setTimeout(function() {
+        Ports.forEach(function (port, idx) {
+            var circle = new createjs.Shape();
+            circle.graphics.beginFill(self.config.color[port.Nation]).drawCircle(0, 0, 5);
+            circle.x = (port.sourcePosition.x + self.config.portsOffset.x) * self.config.portsOffset.ratio;
+            circle.y = (port.sourcePosition.y + self.config.portsOffset.y) * self.config.portsOffset.ratio;
+            circle.cursor = "pointer";
+            circle.idx = idx;
+            self.statistics[getNationFromIdx(port.Nation).Name] += 1;
+            circle.on("click", function () {
+                var currPort = Ports[this.idx];
+                $('#port-title').text(currPort.Name);
+                $('#nation').text(getNationFromIdx(currPort.Nation).Name);
+                var timer = currPort.ConquestFlagTimeSlot + 'h - ' + (currPort.ConquestFlagTimeSlot + 2) + "h";
+                $('#timer').text(currPort.ConquestFlagTimeSlot == -1?'No Timer':timer);
+                $('#capital').text(currPort.Capital?'yes':'no');
+                $('#regional').text(currPort.Regional?'yes':'no');
+                $('#shallow').text(currPort.Depth == 1?'yes':'no');
+                $('#capturer').text(currPort.Capturer);
+                var produces = Shops[this.idx].ResourcesProduced;
+                var consumes = Shops[this.idx].ResourcesConsumed;
+                $('#produces-list').html('');
+                $('#consumes-list').html('');
+                produces.forEach(function (produce) {
+                    var item = getItemTemplateFromId(produce.Key);
+                    $('#produces-list').append('<li class="list-group-item">'+item.Name+' : '+ produce.Value+'</li>');
+                });
+                consumes.forEach(function (consume) {
+                    var item = getItemTemplateFromId(consume.Key);
+                    $('#consumes-list').append('<li class="list-group-item">'+item.Name+' : '+ consume.Value+'</li>');
+                });
             });
-            consumes.forEach(function (consume) {
-                var item = getItemTemplateFromId(consume.Key);
-                $('#consumes-list').append('<li class="list-group-item">'+item.Name+' : '+ consume.Value+'</li>');
-            });
+            circle.cache(-5, -5, 10, 10);
+            self.mapContainer.addChild(circle);
         });
-        self.mapContainer.addChild(circle);
-    });
+        self.update = true;
+        self.stage.tick();
+    },200);
 };
 
 Map.prototype.keepMapUnderPos = function (x, y) {
@@ -288,10 +303,9 @@ Map.prototype.createAllEvents = function () {
     this.mouseDownEvent();
     this.clickEvent();
     this.pressMoveEvent();
-    this.pressUpEvent();
+    //this.pressUpEvent();
     this.dblClickEvent();
     this.mouseWheelEvent();
-    this.tickEvent();
 };
 
 Map.prototype.dblClickEvent = function () {
@@ -326,7 +340,7 @@ Map.prototype.clickEvent = function () {
 Map.prototype.mouseDownEvent = function () {
     this.globalContainer.on("mousedown", function (evt) {
         this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
-        this.cursor = "move";
+        //this.cursor = "move";
     });
 };
 
@@ -335,7 +349,7 @@ Map.prototype.pressMoveEvent = function () {
     this.globalContainer.on("pressmove", function (evt) {
         this.x = evt.stageX + this.offset.x;
         this.y = evt.stageY + this.offset.y;
-        this.cursor = "move";
+        //this.cursor = "move";
         self.update = true;
     });
 };
@@ -344,7 +358,7 @@ Map.prototype.pressUpEvent = function () {
     var self = this;
     this.globalContainer.on("pressup", function (evt) {
         this.cursor = "default";
-        self.update = true;
+        //self.update = true;
     });
 };
 
@@ -389,6 +403,7 @@ Map.prototype.resizeCanvas = function (self) {
 Map.prototype.tickEvent = function () {
     var self = this;
     createjs.Ticker.addEventListener("tick", function (event) {
+        self.fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
         if (self.update) {
             self.copyMapContainer();
             self.update = false; // only update once
