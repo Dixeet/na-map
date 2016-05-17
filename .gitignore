@@ -52,3 +52,9 @@ fabric.properties
 
 # *.iml
 # modules.xml
+
+cache/Ports.js
+cache/Items.js
+cache/Nations.js
+cache/Shops.js
+cache/Ports_old.js

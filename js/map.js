@@ -61,7 +61,7 @@ NavalMap.prototype.checkEverethingIsLoaded = function () {
 
 NavalMap.prototype.loadItems = function(cb) {
     var self = this;
-    $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/ItemTemplates_cleanopenworldprodeu1.json").done(function(){
+    $.getScript("items.php").done(function(){
         self.itemsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -73,7 +73,7 @@ NavalMap.prototype.loadItems = function(cb) {
 
 NavalMap.prototype.loadNations = function(cb) {
     var self = this;
-    $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/Nations_cleanopenworldprodeu1.json").done(function(){
+    $.getScript("nations.php").done(function(){
         self.nationsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -85,7 +85,7 @@ NavalMap.prototype.loadNations = function(cb) {
 
 NavalMap.prototype.loadShops = function(cb) {
     var self = this;
-    $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/Shops_cleanopenworldprodeu1.json").done(function(){
+    $.getScript("shops.php").done(function(){
         self.shopsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -97,7 +97,7 @@ NavalMap.prototype.loadShops = function(cb) {
 
 NavalMap.prototype.loadPorts = function(cb) {
     var self = this;
-    $.getScript("http://storage.googleapis.com/nacleanopenworldprodshards/Ports_cleanopenworldprodeu1.json").done(function(){
+    $.getScript("ports.php").done(function(){
         self.portsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
