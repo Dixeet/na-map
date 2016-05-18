@@ -59,7 +59,7 @@ NavalMap.prototype.checkEverethingIsLoaded = function () {
 
 NavalMap.prototype.loadItems = function(cb) {
     var self = this;
-    $.getScript("http://map.licornes.eu/items.php").done(function(){
+    $.getScript("items.php").done(function(){
         self.itemsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -71,7 +71,7 @@ NavalMap.prototype.loadItems = function(cb) {
 
 NavalMap.prototype.loadNations = function(cb) {
     var self = this;
-    $.getScript("http://map.licornes.eu/nations.php").done(function(){
+    $.getScript("nations.php").done(function(){
         self.nationsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -83,7 +83,7 @@ NavalMap.prototype.loadNations = function(cb) {
 
 NavalMap.prototype.loadShops = function(cb) {
     var self = this;
-    $.getScript("http://map.licornes.eu/shops.php").done(function(){
+    $.getScript("shops.php").done(function(){
         self.shopsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -95,7 +95,7 @@ NavalMap.prototype.loadShops = function(cb) {
 
 NavalMap.prototype.loadPorts = function(cb) {
     var self = this;
-    $.getScript("http://map.licornes.eu/ports.php").done(function(){
+    $.getScript("ports.php").done(function(){
         self.portsLoaded = true;
         if (self.checkEverethingIsLoaded()) {
             if(cb) {
@@ -148,7 +148,6 @@ Map.prototype.init = function (imageMap) {
         self.statistics[nation.Name] = 0;
     });
     this.addPorts();
-    this.populateStatistics();
     this.stage.update();
     self.tickEvent();
     setTimeout(function() {
@@ -180,7 +179,7 @@ Map.prototype.initContainerMap = function () {
 };
 
 Map.prototype.populateStatistics = function () {
-    var stats = $("#ports-number")
+    var stats = $("#ports-number");
     $.each(this.statistics, function(name, number) {
         stats.append('<strong>' + name + ' : </strong>' + number + '<br>');
     })
@@ -233,6 +232,7 @@ Map.prototype.addPorts = function () {
         });
         self.update = true;
         self.stage.tick();
+        self.populateStatistics();
     },200);
 };
 
